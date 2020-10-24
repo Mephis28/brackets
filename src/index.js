@@ -1,42 +1,27 @@
 module.exports = function check(str, bracketsConfig) {
-  const brackets = bracketsConfig.flat().join("");
-  const open = "([|{";
-  const close = ")]|}";
+  const bracketsArray = bracketsConfig.flat();
+  let open = [];
+  let close = [];
+  let strArray = str.split("");
 
-  let strCheck = str;
-  let bracketsCheck = brackets;
+  for (let i = 0; i < bracketsArray.length; i = i + 2) {
+    open.push(bracketsArray[i]);
+    close.push(bracketsArray[i + 1]);
+  }
 
   for (let i = 0; i < str.length; i++) {
-    for (let j = 0; j < strCheck.length; j++) {
-      let symbol1 = strCheck.charAt(j);
+    for (let j = 0; j < strArray.length; j++) {
+      let symbol1 = strArray[j];
+      let symbol2 = strArray[j + 1];
       if (open.indexOf(symbol1) < 0) {
         break;
       }
-      let symbol2 = strCheck.charAt(j + 1);
-      if (close.charAt(open.indexOf(symbol1)) === symbol2) {
-        strCheck = strCheck.replace(symbol1, "").replace(symbol2, "");
+      if (close[open.indexOf(symbol1)] === symbol2) {
+        strArray.splice(j, 2);
         break;
       }
     }
   }
 
-  for (let i = 0; i < brackets.length; i++) {
-    for (let j = 0; j < bracketsCheck.length; j++) {
-      let symbol1 = bracketsCheck.charAt(j);
-      if (open.indexOf(symbol1) < 0) {
-        break;
-      }
-      let symbol2 = bracketsCheck.charAt(j + 1);
-      if (close.charAt(open.indexOf(symbol1)) === symbol2) {
-        bracketsCheck = bracketsCheck.replace(symbol1, "").replace(symbol2, "");
-        break;
-      }
-    }
-  }
-
-  if (!strCheck && !bracketsCheck) {
-    return true;
-  } else {
-    return false;
-  }
+  return !strArray.toString("");
 }
